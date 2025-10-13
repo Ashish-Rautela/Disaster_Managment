@@ -147,7 +147,7 @@ void printShortestPath(Graph* g, int src, int dest, int parent[]) {
         return;
     }
     
-    printf("📍 Route: %s", g->cities[src].name);
+    printf(" Route: %s", g->cities[src].name);
     printPathRecursive(g, parent, dest);
     printf("\n");
 }

@@ -55,7 +55,7 @@ void heapifyDown(PriorityQueue* pq, int idx) {
 
 void insertRequest(PriorityQueue* pq, CityRequest req) {
     if (pq->size >= MAX_REQUESTS) {
-        printf("❌ Priority queue full!\n");
+        printf(" Priority queue full!\n");
         return;
     }
     
@@ -63,7 +63,7 @@ void insertRequest(PriorityQueue* pq, CityRequest req) {
     heapifyUp(pq, pq->size);
     pq->size++;
     
-    printf("✅ Disaster request added: %s (Urgency: %d/10, Resources needed: %d)\n",
+    printf("Disaster request added: %s (Urgency: %d/10, Resources needed: %d)\n",
            req.cityName, req.urgency, req.resourcesNeeded);
 }
 
@@ -152,11 +152,11 @@ void updateStatus(HashMap* map, const char* cityName, Status status) {
 
 void displayResourceStatus(HashMap* map) {
     const char* statusStr[] = {"PENDING", "IN_TRANSIT", "COMPLETED"};
-    
-    printf("\n╔═══════════════════════════════════════════════════════════════════╗\n");
-    printf("║              RESOURCE ALLOCATION STATUS                           ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════════╝\n\n");
-    
+
+    printf("\n---------------------------------------------------------------------\n");
+    printf("              RESOURCE ALLOCATION STATUS                           \n");
+    printf("---------------------------------------------------------------------\n\n");
+
     int found = 0;
     for (int i = 0; i < HASH_SIZE; i++) {
         HashEntry* current = map->buckets[i];
@@ -167,7 +167,7 @@ void displayResourceStatus(HashMap* map) {
             printf("   Resources Allocated: %d units\n", current->resourcesAllocated);
             printf("   Support from: %s (%d km)\n", 
                    current->supportCity, current->distance);
-            printf("   ─────────────────────────────────────────────────────────────\n");
+            printf("   ---------------------------------------------------------------------\n");
             current = current->next;
         }
     }
@@ -218,7 +218,7 @@ void logAllocation(const char* disasterCity, const char* supportCity,
                    int resources, int distance, const char* path) {
     FILE* fp = fopen("allocation_logs.txt", "a");
     if (!fp) {
-        printf("⚠️  Warning: Could not open log file\n");
+        printf("  Warning: Could not open log file\n");
         return;
     }
     
@@ -227,38 +227,38 @@ void logAllocation(const char* disasterCity, const char* supportCity,
     char timeStr[26];
     strftime(timeStr, 26, "%Y-%m-%d %H:%M:%S", tm_info);
     
-    fprintf(fp, "═══════════════════════════════════════════════════════════════\n");
+    fprintf(fp, "-------------------------------------------------------------------\n");
     fprintf(fp, "Timestamp: %s\n", timeStr);
     fprintf(fp, "Disaster City: %s\n", disasterCity);
     fprintf(fp, "Support City: %s\n", supportCity);
     fprintf(fp, "Resources Allocated: %d units\n", resources);
     fprintf(fp, "Distance: %d km\n", distance);
     fprintf(fp, "Route: %s\n", path);
-    fprintf(fp, "═══════════════════════════════════════════════════════════════\n\n");
+    fprintf(fp, "---------------------------------------------------------------------\n\n");
     
     fclose(fp);
 }
 
 void allocateResources(Graph* g, PriorityQueue* pq, HashMap* map) {
     if (isPQEmpty(pq)) {
-        printf("\n⚠️  No pending disaster requests.\n");
+        printf("\n  No pending disaster requests.\n");
         return;
     }
     
     CityRequest req = extractMostUrgent(pq);
-    
-    printf("\n╔═══════════════════════════════════════════════════════════════════╗\n");
-    printf("║              PROCESSING DISASTER REQUEST                          ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════════╝\n");
-    printf("🚨 Disaster City: %s\n", req.cityName);
-    printf("⚡ Urgency Level: %d/10\n", req.urgency);
-    printf("📦 Resources Needed: %d units\n\n", req.resourcesNeeded);
+
+    printf("\n---------------------------------------------------------------------\n");
+    printf("              PROCESSING DISASTER REQUEST                          \n");
+    printf("---------------------------------------------------------------------\n");
+    printf(" Disaster City: %s\n", req.cityName);
+    printf(" Urgency Level: %d/10\n", req.urgency);
+    printf(" Resources Needed: %d units\n\n", req.resourcesNeeded);
     
     int distance;
     int supportCityId = findNearestSupportCity(g, req.cityId, req.resourcesNeeded, &distance);
     
     if (supportCityId == -1) {
-        printf("❌ No suitable support city found with sufficient resources!\n");
+        printf(" No suitable support city found with sufficient resources!\n");
         insertRequest(pq, req); // Re-insert for later
         return;
     }
@@ -268,11 +268,11 @@ void allocateResources(Graph* g, PriorityQueue* pq, HashMap* map) {
     int parent[MAX_CITIES];
     dijkstra(g, req.cityId, dist, parent);
     
-    printf("✅ ALLOCATION SUCCESSFUL!\n");
+    printf(" ALLOCATION SUCCESSFUL!\n");
     printf("───────────────────────────────────────────────────────────────────\n");
-    printf("📍 Support City: %s\n", g->cities[supportCityId].name);
-    printf("📦 Resources Allocated: %d units\n", req.resourcesNeeded);
-    printf("🛣️  Distance: %d km\n", distance);
+    printf(" Support City: %s\n", g->cities[supportCityId].name);
+    printf(" Resources Allocated: %d units\n", req.resourcesNeeded);
+    printf("  Distance: %d km\n", distance);
     printShortestPath(g, req.cityId, supportCityId, parent);
     printf("───────────────────────────────────────────────────────────────────\n");
     

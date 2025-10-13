@@ -71,13 +71,13 @@ void addEdge(Graph* g, int src, int dest, int distance) {
 
 // Display the entire graph network
 void displayGraph(Graph* g) {
-    printf("\n╔═══════════════════════════════════════════════════════════════════╗\n");
-    printf("║              DISASTER RELIEF CITY NETWORK                         ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════════╝\n\n");
+    printf("\n---------------------------------------------------------------------\n");
+    printf("              DISASTER RELIEF CITY NETWORK                         \n");
+    printf("---------------------------------------------------------------------\n\n");
     
     for (int i = 0; i < g->numCities; i++) {
         City* city = &g->cities[i];
-        printf("🏙️  City: %-15s [ID: %d]\n", city->name, city->id);
+        printf("  City: %-15s [ID: %d]\n", city->name, city->id);
         printf("   Population: %d | Damage Level: %d/10 | Resources: %d units\n",
                city->population, city->damageLevel, city->availableResources);
         printf("   Coordinates: (%.2f, %.2f)\n", city->latitude, city->longitude);
@@ -94,7 +94,7 @@ void displayGraph(Graph* g) {
             }
             printf("\n");
         }
-        printf("   ─────────────────────────────────────────────────────────────\n");
+        printf("   ---------------------------------------------------------------------\n");
     }
 }
 

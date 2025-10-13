@@ -59,12 +59,12 @@ void addNewCity(Graph* g) {
 
 // Add a road between two cities
 void addNewRoad(Graph* g) {
-    printf("\n╔═══════════════════════════════════════════════════════════════════╗\n");
-    printf("║                    ADD ROAD BETWEEN CITIES                        ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════════╝\n\n");
+    printf("\n-------------------------------------------------------------\n");
+    printf("!                    ADD ROAD BETWEEN CITIES                        !\n");
+    printf("-------------------------------------------------------------\n\n");
     
     if (g->numCities < 2) {
-        printf("❌ Need at least 2 cities to add a road!\n");
+        printf(" Need at least 2 cities to add a road!\n");
         return;
     }
     
@@ -77,25 +77,25 @@ void addNewRoad(Graph* g) {
     int dest = getIntInput("Enter destination city ID: ", 0, g->numCities - 1);
     
     if (src == dest) {
-        printf("❌ Source and destination cannot be the same!\n");
+        printf(" Source and destination cannot be the same!\n");
         return;
     }
     
     int distance = getIntInput("Enter distance in km: ", 1, 10000);
     
     addEdge(g, src, dest, distance);
-    printf("\n✅ Road added: %s ↔ %s (%d km)\n", 
+    printf("\nRoad added: %s ↔ %s (%d km)\n", 
            g->cities[src].name, g->cities[dest].name, distance);
 }
 
 // Raise a disaster request
 void raiseDisasterRequest(Graph* g, PriorityQueue* pq, HashMap* map) {
-    printf("\n╔═══════════════════════════════════════════════════════════════════╗\n");
-    printf("║                   RAISE DISASTER REQUEST                          ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════════╝\n\n");
+    printf("\n------------------------------------------------------------------------\n");
+    printf("!                   RAISE DISASTER REQUEST                          !\n");
+    printf("----------------------------------------------------------------------\n\n");
     
     if (g->numCities == 0) {
-        printf("❌ No cities in the network!\n");
+        printf(" No cities in the network!\n");
         return;
     }
     
@@ -179,13 +179,13 @@ int main() {
                 break;
                 
             case 8:
-                printf("\n👋 Thank you for using the Disaster Relief System!\n");
-                printf("💾 All allocation logs saved to: allocation_logs.txt\n\n");
+                printf("\n Thank you for using the Disaster Relief System!\n");
+                printf(" All allocation logs saved to: allocation_logs.txt\n\n");
                 running = 0;
                 break;
                 
             default:
-                printf("❌ Invalid choice!\n");
+                printf("Invalid choice!\n");
                 pressEnterToContinue();
         }
     }

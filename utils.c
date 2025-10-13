@@ -22,10 +22,10 @@ int getIntInput(const char* prompt, int min, int max) {
             if (value >= min && value <= max) {
                 valid = 1;
             } else {
-                printf("❌ Invalid input. Please enter a value between %d and %d.\n", min, max);
+                printf("Invalid input. Please enter a value between %d and %d.\n", min, max);
             }
         } else {
-            printf("❌ Invalid input. Please enter a number.\n");
+            printf("Invalid input. Please enter a number.\n");
             clearInputBuffer();
         }
         if (!valid) clearInputBuffer();
@@ -50,7 +50,7 @@ double getDoubleInput(const char* prompt) {
     double value;
     printf("%s", prompt);
     while (scanf("%lf", &value) != 1) {
-        printf("❌ Invalid input. Please enter a number.\n");
+        printf("Invalid input. Please enter a number.\n");
         clearInputBuffer();
         printf("%s", prompt);
     }
@@ -61,30 +61,28 @@ double getDoubleInput(const char* prompt) {
 // Display main banner
 void displayBanner() {
     printf("\n");
-    printf("╔═══════════════════════════════════════════════════════════════════╗\n");
-    printf("║                                                                   ║\n");
-    printf("║      🚨 DISASTER RELIEF RESOURCE MANAGEMENT SYSTEM 🚨            ║\n");
-    printf("║                                                                   ║\n");
-    printf("║           Efficient Resource Allocation via Graph Network        ║\n");
-    printf("║                                                                   ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════════╝\n");
+    printf("-------------------------------------------------------------\n");
+    printf("|                                                           |\n");
+    printf("|        DISASTER RELIEF RESOURCE MANAGEMENT SYSTEM        |\n");
+    printf("|                                                           |\n");
+    printf("|      Efficient Resource Allocation via Graph Network     |\n");
+    printf("|                                                           |\n");
+    printf("-------------------------------------------------------------\n");
 }
 
 // Display main menu
 void displayMainMenu() {
     printf("\n");
-    printf("┌───────────────────────────────────────────────────────────────────┐\n");
-    printf("│                         MAIN MENU                                 │\n");
-    printf("├───────────────────────────────────────────────────────────────────┤\n");
-    printf("│  1. 🗺️  Display City Network                                     │\n");
-    printf("│  2. 🏙️  Add New City                                             │\n");
-    printf("│  3. 🛣️  Add Road Between Cities                                  │\n");
-    printf("│  4. 🚨 Raise Disaster Request                                     │\n");
-    printf("│  5. 📦 Allocate Resources (Process Next Request)                 │\n");
-    printf("│  6. 📊 Display Allocation Status                                  │\n");
-    printf("│  7. 📄 View Allocation Logs                                       │\n");
-    printf("│  8. 🚪 Exit                                                        │\n");
-    printf("└───────────────────────────────────────────────────────────────────┘\n");
+    printf("==================================== MAIN MENU ====================================\n");
+    printf("1. Display City Network\n");
+    printf("2. Add New City\n");
+    printf("3. Add Road Between Cities\n");
+    printf("4. Raise Disaster Request\n");
+    printf("5. Allocate Resources (Process Next Request)\n");
+    printf("6. Display Allocation Status\n");
+    printf("7. View Allocation Logs\n");
+    printf("8. Exit\n");
+    printf("===================================================================================\n");
 }
 
 // Press enter to continue
@@ -106,13 +104,11 @@ void clearScreen() {
 void displayLogFile() {
     FILE* fp = fopen("allocation_logs.txt", "r");
     if (!fp) {
-        printf("\n📄 No allocation logs found yet.\n");
+        printf("\nNo allocation logs found yet.\n");
         return;
     }
     
-    printf("\n╔═══════════════════════════════════════════════════════════════════╗\n");
-    printf("║                    ALLOCATION LOG FILE                            ║\n");
-    printf("╚═══════════════════════════════════════════════════════════════════╝\n\n");
+    printf("\n==================== ALLOCATION LOG FILE ====================\n\n");
     
     char line[256];
     while (fgets(line, sizeof(line), fp)) {
