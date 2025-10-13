@@ -1,0 +1,58 @@
+# --- FILE: Makefile ---
+# Makefile for Disaster Relief Resource Management System
+
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -O2
+TARGET = disaster_relief
+OBJS = main.o graph.o dijkstra.o resources.o utils.o
+
+# Default target
+all: $(TARGET)
+
+# Link all object files
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+	@echo "✅ Build successful! Run with: ./$(TARGET)"
+
+# Compile individual source files
+main.o: main.c graph.h dijkstra.h resources.h utils.h
+	$(CC) $(CFLAGS) -c main.c
+
+graph.o: graph.c graph.h
+	$(CC) $(CFLAGS) -c graph.c
+
+dijkstra.o: dijkstra.c dijkstra.h graph.h
+	$(CC) $(CFLAGS) -c dijkstra.c
+
+resources.o: resources.c resources.h graph.h dijkstra.h
+	$(CC) $(CFLAGS) -c resources.c
+
+utils.o: utils.c utils.h
+	$(CC) $(CFLAGS) -c utils.c
+
+# Clean build artifacts
+clean:
+	rm -f $(OBJS) $(TARGET) allocation_logs.txt
+	@echo "🧹 Cleaned all build files"
+
+# Clean only object files
+clean-obj:
+	rm -f $(OBJS)
+	@echo "🧹 Cleaned object files"
+
+# Run the program
+run: $(TARGET)
+	./$(TARGET)
+
+# Show help
+help:
+	@echo "Disaster Relief Resource Management System - Makefile"
+	@echo ""
+	@echo "Available targets:"
+	@echo "  make          - Build the project"
+	@echo "  make clean    - Remove all build files and logs"
+	@echo "  make clean-obj- Remove only object files"
+	@echo "  make run      - Build and run the program"
+	@echo "  make help     - Show this help message"
+
+.PHONY: all clean clean-obj run help

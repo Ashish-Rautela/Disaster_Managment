@@ -1,0 +1,204 @@
+🚨 Disaster Relief Resource Management System
+A comprehensive C-based terminal application for managing disaster relief resource allocation using graph algorithms, priority queues, and hashmaps.
+
+📋 Overview
+This system manages the allocation of relief resources across cities after a disaster. Cities are represented as nodes in a weighted graph where roads have distances in kilometers. When a disaster occurs, the system:
+
+Finds the nearest unaffected city with sufficient resources
+Allocates and tracks resources via priority queue + hashmap
+Calculates the shortest path using Dijkstra's algorithm
+Updates city status (Pending, In Transit, Completed)
+Displays detailed allocation reports
+🏗️ Project Structure
+disaster_relief/
+├── main.c              # Main program with menu interface
+├── graph.c/h           # Weighted adjacency list graph implementation
+├── dijkstra.c/h        # Dijkstra's algorithm with min-heap
+├── resources.c/h       # Resource allocation with priority queue & hashmap
+├── utils.c/h           # Helper functions (input, menu, logging)
+├── Makefile            # Build automation
+└── allocation_logs.txt # Auto-generated allocation logs
+🔧 Technical Features
+Graph Module (graph.c/h)
+Weighted adjacency list representation
+Each city stores: ID, name, population, damage level, resources, coordinates
+Bidirectional roads with distances in km
+Dynamic edge management
+Dijkstra Module (dijkstra.c/h)
+Min-heap priority queue implementation
+O(E log V) time complexity
+Shortest path calculation between any two cities
+Parent array for path reconstruction
+Resources Module (resources.c/h)
+Max-heap priority queue for urgent disaster requests
+Hashmap for O(1) status tracking
+Status states: PENDING → IN_TRANSIT → COMPLETED
+Automatic nearest city selection with resource constraints
+File-based allocation logging
+Utils Module (utils.c/h)
+Input validation and sanitization
+Cross-platform screen clearing
+Menu system with visual formatting
+Log file management
+🚀 Compilation & Execution
+Using Makefile (Recommended)
+bash
+# Build the project
+make
+
+# Build and run
+make run
+
+# Clean build artifacts
+make clean
+
+# Show help
+make help
+Manual Compilation
+bash
+gcc -Wall -Wextra -std=c99 -O2 -o disaster_relief \
+    main.c graph.c dijkstra.c resources.c utils.c
+
+./disaster_relief
+📊 Sample Dataset
+The system initializes with 7 interconnected cities:
+
+City	Population	Damage Level	Resources	Coordinates
+Mumbai	12,500,000	8/10	500	(19.08, 72.88)
+Pune	3,200,000	2/10	1200	(18.52, 73.86)
+Nashik	1,500,000	1/10	800	(19.99, 73.79)
+Nagpur	2,400,000	1/10	1500	(21.15, 79.09)
+Aurangabad	1,200,000	3/10	600	(19.88, 75.34)
+Kolhapur	550,000	0/10	900	(16.71, 74.24)
+Thane	1,850,000	5/10	400	(19.22, 72.98)
+Road Network:
+
+Mumbai ↔ Pune (150 km)
+Mumbai ↔ Nashik (165 km)
+Mumbai ↔ Thane (30 km)
+Pune ↔ Aurangabad (215 km)
+Pune ↔ Kolhapur (230 km)
+Nashik ↔ Nagpur (330 km)
+Nashik ↔ Aurangabad (185 km)
+Nagpur ↔ Aurangabad (325 km)
+Aurangabad ↔ Kolhapur (290 km)
+Thane ↔ Nashik (145 km)
+🎮 Usage Example
+Example Terminal Flow
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║      🚨 DISASTER RELIEF RESOURCE MANAGEMENT SYSTEM 🚨            ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────┐
+│                         MAIN MENU                                 │
+├───────────────────────────────────────────────────────────────────┤
+│  1. 🗺️  Display City Network                                     │
+│  2. 🏙️  Add New City                                             │
+│  3. 🛣️  Add Road Between Cities                                  │
+│  4. 🚨 Raise Disaster Request                                     │
+│  5. 📦 Allocate Resources (Process Next Request)                 │
+│  6. 📊 Display Allocation Status                                  │
+│  7. 📄 View Allocation Logs                                       │
+│  8. 🚪 Exit                                                        │
+└───────────────────────────────────────────────────────────────────┘
+
+Enter your choice: 4
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                   RAISE DISASTER REQUEST                          ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+Cities in network:
+  0. Mumbai (Damage Level: 8/10)
+  1. Pune (Damage Level: 2/10)
+  ...
+
+Enter disaster city ID: 0
+Enter urgency level (1-10, 10=most urgent): 9
+Enter resources needed: 800
+
+✅ Disaster request added: Mumbai (Urgency: 9/10, Resources needed: 800)
+
+Enter your choice: 5
+
+╔═══════════════════════════════════════════════════════════════════╗
+║              PROCESSING DISASTER REQUEST                          ║
+╚═══════════════════════════════════════════════════════════════════╝
+🚨 Disaster City: Mumbai
+⚡ Urgency Level: 9/10
+📦 Resources Needed: 800 units
+
+✅ ALLOCATION SUCCESSFUL!
+───────────────────────────────────────────────────────────────────
+📍 Support City: Pune
+📦 Resources Allocated: 800 units
+🛣️  Distance: 150 km
+📍 Route: Mumbai → Pune
+───────────────────────────────────────────────────────────────────
+
+💾 Allocation logged to file: allocation_logs.txt
+🎯 Menu Options
+Display City Network - Shows all cities, connections, and resource levels
+Add New City - Dynamically add cities to the network
+Add Road Between Cities - Create new connections with distances
+Raise Disaster Request - Submit urgent resource requests with priority
+Allocate Resources - Process the most urgent request using Dijkstra
+Display Allocation Status - View current status of all allocations
+View Allocation Logs - Read detailed logs from file
+Exit - Clean shutdown with memory deallocation
+📝 Key Algorithms
+Dijkstra's Shortest Path
+Time Complexity: O(E log V) using min-heap
+Space Complexity: O(V)
+Finds optimal route for resource transport
+Priority Queue (Max-Heap)
+Insert: O(log n)
+Extract Max: O(log n)
+Ensures most urgent requests processed first
+HashMap (Chaining)
+Insert/Search: O(1) average case
+Hash function: (hash * 31 + char) % HASH_SIZE
+Tracks allocation status efficiently
+🔒 Safety Features
+Input validation on all user inputs
+Memory leak prevention with proper cleanup
+Bounds checking on array accesses
+NULL pointer checks
+Include guards in all headers
+📄 Logging
+All allocations are automatically logged to allocation_logs.txt with:
+
+Timestamp
+Disaster and support cities
+Resources allocated
+Distance and route
+Formatted for audit trail
+🛠️ Requirements
+Compiler: GCC (or any C99-compatible compiler)
+OS: Linux, macOS, Windows (with GCC/MinGW)
+Libraries: Standard C library only (stdio, stdlib, string, limits)
+📚 Learning Objectives
+This project demonstrates:
+
+✅ Graph representation and traversal
+✅ Priority queue implementation
+✅ Hashmap with collision handling
+✅ Dijkstra's algorithm
+✅ Modular C programming
+✅ Memory management
+✅ File I/O operations
+✅ Menu-driven interfaces
+🤝 Contributing
+This is an educational project. Feel free to:
+
+Add new features (e.g., A* algorithm, GUI)
+Optimize algorithms
+Improve error handling
+Add unit tests
+📜 License
+Educational project - free to use and modify.
+
+Built with ❤️ for disaster relief management optimization
+
