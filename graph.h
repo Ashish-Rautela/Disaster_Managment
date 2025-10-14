@@ -1,7 +1,7 @@
 // --- FILE: graph.h ---
 #ifndef GRAPH_H
 #define GRAPH_H
-
+#define INF 999999
 #define MAX_CITIES 50
 #define MAX_NAME_LEN 50
 

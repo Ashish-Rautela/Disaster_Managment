@@ -4,14 +4,15 @@
 
 #include "graph.h"
 
-#define MAX_REQUESTS 100
+#define MAX_REQUESTS 1000
 #define HASH_SIZE 50
 
 // Status enumeration
 typedef enum {
     PENDING,
     IN_TRANSIT,
-    COMPLETED
+    COMPLETED,
+    FAILED
 } Status;
 
 // City request structure for priority queue

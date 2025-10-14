@@ -1,0 +1,24 @@
+Timestamp: 2025-10-14 06:41:23
+Disaster City: Haridwar
+Resources Needed: 1000 units
+Support City: Rishikesh | Sent: 400 | Distance: 25 km
+Support City: Haldwani | Sent: 600 | Distance: 190 km
+Status: SUCCESS
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Timestamp: 2025-10-14 06:41:29
+Disaster City: Nainital
+Resources Needed: 10 units
+Support City: Haldwani | Sent: 10 | Distance: 40 km
+Status: SUCCESS
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Timestamp: 2025-10-14 06:42:05
+Disaster City: Pithoragarh
+Resources Needed: 100 units
+Support City: Almora | Sent: 100 | Distance: 160 km
+Status: SUCCESS
+-------------------------------------------------------------------
+

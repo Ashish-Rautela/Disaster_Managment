@@ -207,6 +207,10 @@ int findNearestSupportCity(Graph* g, int disasterCity, int resourcesNeeded,
             dist[i] < minDist) {
             minDist = dist[i];
             nearestCity = i;
+                printf("%s: dist=%d, res=%d, damage=%d\n",
+           g->cities[i].name, dist[i],
+           g->cities[i].availableResources,
+           g->cities[i].damageLevel);
         }
     }
     
@@ -248,47 +252,87 @@ void allocateResources(Graph* g, PriorityQueue* pq, HashMap* map) {
     CityRequest req = extractMostUrgent(pq);
 
     printf("\n---------------------------------------------------------------------\n");
-    printf("              PROCESSING DISASTER REQUEST                          \n");
+    printf("              PROCESSING DISASTER REQUEST\n");
     printf("---------------------------------------------------------------------\n");
     printf(" Disaster City: %s\n", req.cityName);
     printf(" Urgency Level: %d/10\n", req.urgency);
     printf(" Resources Needed: %d units\n\n", req.resourcesNeeded);
-    
-    int distance;
-    int supportCityId = findNearestSupportCity(g, req.cityId, req.resourcesNeeded, &distance);
-    
-    if (supportCityId == -1) {
-        printf(" No suitable support city found with sufficient resources!\n");
-        insertRequest(pq, req); // Re-insert for later
-        return;
-    }
-    
-    // Calculate path
-    int dist[MAX_CITIES];
-    int parent[MAX_CITIES];
+
+    int dist[MAX_CITIES], parent[MAX_CITIES];
     dijkstra(g, req.cityId, dist, parent);
-    
-    printf(" ALLOCATION SUCCESSFUL!\n");
-    printf("───────────────────────────────────────────────────────────────────\n");
-    printf(" Support City: %s\n", g->cities[supportCityId].name);
-    printf(" Resources Allocated: %d units\n", req.resourcesNeeded);
-    printf("  Distance: %d km\n", distance);
-    printShortestPath(g, req.cityId, supportCityId, parent);
-    printf("───────────────────────────────────────────────────────────────────\n");
-    
-    // Update graph
-    g->cities[supportCityId].availableResources -= req.resourcesNeeded;
-    
-    // Update hashmap
-    insertHashEntry(map, req.cityName, IN_TRANSIT, req.resourcesNeeded, 
-                    g->cities[supportCityId].name, distance);
-    
-    // Log allocation
-    char pathStr[500];
-    snprintf(pathStr, sizeof(pathStr), "%s → %s", 
-             req.cityName, g->cities[supportCityId].name);
-    logAllocation(req.cityName, g->cities[supportCityId].name, 
-                  req.resourcesNeeded, distance, pathStr);
-    
+
+    int remaining = req.resourcesNeeded;
+    int totalAllocated = 0;
+    int donorCount = 0;
+
+    // Sorting cities by distance (simple selection sort)
+    int order[MAX_CITIES];
+    for (int i = 0; i < g->numCities; i++) order[i] = i;
+    for (int i = 0; i < g->numCities - 1; i++) {
+        for (int j = i + 1; j < g->numCities; j++) {
+            if (dist[order[i]] > dist[order[j]]) {
+                int tmp = order[i];
+                order[i] = order[j];
+                order[j] = tmp;
+            }
+        }
+    }
+
+    // Open log file
+    FILE* fp = fopen("allocation_logs.txt", "a");
+    time_t t = time(NULL);
+    struct tm* tm_info = localtime(&t);
+    char timeStr[26];
+    strftime(timeStr, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+
+    fprintf(fp, "-------------------------------------------------------------------\n");
+    fprintf(fp, "Timestamp: %s\n", timeStr);
+    fprintf(fp, "Disaster City: %s\n", req.cityName);
+    fprintf(fp, "Resources Needed: %d units\n", req.resourcesNeeded);
+
+    printf(" Allocating resources from nearest cities...\n");
+
+    for (int k = 0; k < g->numCities && remaining > 0; k++) {
+        int i = order[k];
+        if (i == req.cityId) continue;
+        if (g->cities[i].damageLevel > 6) continue; // skip heavily damaged
+        if (g->cities[i].availableResources <= 0) continue;
+        if (dist[i] == INF) continue;
+
+        int give = (g->cities[i].availableResources >= remaining)
+                     ? remaining
+                     : g->cities[i].availableResources;
+
+        if (give <= 0) continue;
+
+        g->cities[i].availableResources -= give;
+        remaining -= give;
+        totalAllocated += give;
+        donorCount++;
+
+        printf("\n Support City: %s", g->cities[i].name);
+        printf("\n   Distance: %d km", dist[i]);
+        printf("\n   Sent: %d units", give);
+        printf("\n   Remaining Need: %d units\n", remaining);
+
+        fprintf(fp, "Support City: %s | Sent: %d | Distance: %d km\n",
+                g->cities[i].name, give, dist[i]);
+    }
+
+    // Final status
+    if (remaining > 0) {
+        printf("\n  Still need %d more units! Not enough resources nearby.\n", remaining);
+        insertHashEntry(map, req.cityName, FAILED, totalAllocated,
+                        (donorCount > 0 ? "Partial" : "N/A"), 0);
+        fprintf(fp, "Status: PARTIAL/FAILED (Unfulfilled %d units)\n", remaining);
+    } else {
+        printf("\n Request fulfilled successfully using %d support cities!\n", donorCount);
+        insertHashEntry(map, req.cityName, IN_TRANSIT, totalAllocated, "Multiple", 0);
+        fprintf(fp, "Status: SUCCESS\n");
+    }
+
+    fprintf(fp, "-------------------------------------------------------------------\n\n");
+    fclose(fp);
+
     printf("\n💾 Allocation logged to file: allocation_logs.txt\n");
 }
