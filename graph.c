@@ -4,28 +4,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Create a new graph with n cities
+// Create graph
 Graph* createGraph(int n) {
     Graph* g = (Graph*)malloc(sizeof(Graph));
     if (!g) {
-        fprintf(stderr, "Memory allocation failed for graph\n");
+        fprintf(stderr, "Graph memory failed\n");
         exit(1);
     }
     g->numCities = 0;
-    for (int i = 0; i < MAX_CITIES; i++) {
+    for (int i = 0; i < MAX_CITIES; i++)
         g->adjList[i] = NULL;
-    }
     return g;
 }
 
-// Add a city to the graph
-void addCity(Graph* g, int id, const char* name, int population, 
+// Add city
+void addCity(Graph* g, int id, const char* name, int population,
              int damageLevel, int resources, double lat, double lon) {
     if (g->numCities >= MAX_CITIES) {
-        fprintf(stderr, "Maximum city limit reached\n");
+        fprintf(stderr, "City limit reached\n");
         return;
     }
-    
+
     City* city = &g->cities[g->numCities];
     city->id = id;
     strncpy(city->name, name, MAX_NAME_LEN - 1);
@@ -35,32 +34,29 @@ void addCity(Graph* g, int id, const char* name, int population,
     city->availableResources = resources;
     city->latitude = lat;
     city->longitude = lon;
-    
     g->numCities++;
 }
 
-// Add a bidirectional edge between two cities
+// Add edge (bidirectional)
 void addEdge(Graph* g, int src, int dest, int distance) {
     if (src >= g->numCities || dest >= g->numCities || src < 0 || dest < 0) {
-        fprintf(stderr, "Invalid city indices\n");
+        fprintf(stderr, "Invalid city index\n");
         return;
     }
-    
-    // Add edge from src to dest
+
     EdgeNode* newNode = (EdgeNode*)malloc(sizeof(EdgeNode));
     if (!newNode) {
-        fprintf(stderr, "Memory allocation failed for edge\n");
+        fprintf(stderr, "Edge memory failed\n");
         return;
     }
     newNode->destCity = dest;
     newNode->distance = distance;
     newNode->next = g->adjList[src];
     g->adjList[src] = newNode;
-    
-    // Add edge from dest to src (bidirectional)
+
     newNode = (EdgeNode*)malloc(sizeof(EdgeNode));
     if (!newNode) {
-        fprintf(stderr, "Memory allocation failed for edge\n");
+        fprintf(stderr, "Edge memory failed\n");
         return;
     }
     newNode->destCity = src;
@@ -69,7 +65,7 @@ void addEdge(Graph* g, int src, int dest, int distance) {
     g->adjList[dest] = newNode;
 }
 
-// Display the entire graph network
+// Display graph
 void displayGraph(Graph* g) {
     printf("\n---------------------------------------------------------------------\n");
     printf("              DISASTER RELIEF CITY NETWORK                         \n");
@@ -94,21 +90,20 @@ void displayGraph(Graph* g) {
             }
             printf("\n");
         }
-        printf("   ---------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------\n");
     }
 }
 
-// Find city index by name
+// Find city index
 int findCityByName(Graph* g, const char* name) {
     for (int i = 0; i < g->numCities; i++) {
-        if (strcmp(g->cities[i].name, name) == 0) {
+        if (strcmp(g->cities[i].name, name) == 0)
             return i;
-        }
     }
     return -1;
 }
 
-// Free all graph memory
+// Free memory
 void freeGraph(Graph* g) {
     for (int i = 0; i < g->numCities; i++) {
         EdgeNode* current = g->adjList[i];

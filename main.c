@@ -169,7 +169,7 @@ int main() {
 
             case 6:
                 displayResourceStatus(map);
-                pressEnterToContinue();
+                pressEnterToContinue(); 
                 break;
 
             case 7:

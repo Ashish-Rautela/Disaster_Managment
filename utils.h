@@ -2,23 +2,21 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-// Input validation functions
+// Input functions
 int getIntInput(const char* prompt, int min, int max);
 void getStringInput(const char* prompt, char* buffer, int maxLen);
 double getDoubleInput(const char* prompt);
 void clearInputBuffer();
 
-// Menu utilities
-void displayMainMenu();
+// Menu/display
 void displayBanner();
+void displayMainMenu();
 void pressEnterToContinue();
-
-// File logging
-void displayLogFile();
 void clearScreen();
+void displayLogFile();
 
 // String utilities
 void trim(char* str);
 int stringCompare(const char* str1, const char* str2);
 
-#endif // UTILS_H
+#endif
